@@ -86,7 +86,8 @@ func main() {
 		REPOSITORY & SERVICE
 	*/
 	categoryRepo := repository.NewInMemoryItemCategoryRepository()
-	categoryService := service.
+	categoryService := service.NewCategoryService(categoryRepo)
+
 	service := service.ItemCategoryService{repo: repo}
 
 	var mainMenu string

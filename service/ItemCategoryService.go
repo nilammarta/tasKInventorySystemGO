@@ -10,7 +10,7 @@ type ItemCategoryService struct {
 }
 
 func NewCategoryService(repo repository.ItemCategoryRepository) *ItemCategoryService {
-	return &ItemCategoryService{repository: repo}
+	return &ItemCategoryService{repo: repo}
 }
 
 func (service *ItemCategoryService) GetAllItemCategories() ([]models.ItemCategory, error) {
