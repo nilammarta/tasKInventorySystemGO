@@ -1,6 +1,7 @@
 package main
 
 import (
+	"TaskInventorySystem/controller"
 	"TaskInventorySystem/repository"
 	"TaskInventorySystem/service"
 	"fmt"
@@ -21,7 +22,7 @@ func showCategoryMenu() {
 	fmt.Println("===== CATEGORY MANAGEMENT MENU =====")
 	fmt.Println("1. SHOW CATEGORIES")
 	fmt.Println("2. ADD CATEGORY")
-	fmt.Println("3. EDIT CATEGORY STOCK")
+	fmt.Println("3. EDIT CATEGORY")
 	fmt.Println("4. REMOVE CATEGORY")
 	fmt.Println("5. BACK TO MAIN MENU")
 	fmt.Print("Your choice: ")
@@ -34,7 +35,7 @@ func pressEnterToContinue() {
 	fmt.Println(" ")
 }
 
-func manageCategories(itemCategories *[]ItemCategory) {
+func manageCategories(categoryController *controller.ItemCategoryController) {
 	var categoryMenu string
 
 	for {
@@ -43,41 +44,27 @@ func manageCategories(itemCategories *[]ItemCategory) {
 
 		if categoryMenu == "1" {
 			fmt.Println("===== SHOW CATEGORIES =====")
-			showCategories(*itemCategories)
+			categoryController.ShowItemCategories()
+			pressEnterToContinue()
 			continue
 		} else if categoryMenu == "2" {
 			fmt.Println("===== ADD CATEGORY =====")
+			categoryController.AddItemCategory()
+			pressEnterToContinue()
 			continue
 		} else if categoryMenu == "3" {
 			fmt.Println("===== EDIT CATEGORY =====")
+			categoryController.EditItemCategory()
+			pressEnterToContinue()
 			continue
 		} else if categoryMenu == "4" {
 			fmt.Println("===== REMOVE CATEGORY =====")
 			continue
 		} else if categoryMenu == "5" {
-			fmt.Println(" <-- BACK TO MAIN MENU")
+			fmt.Println(" <<< BACK TO MAIN MENU")
 			break
 		}
 	}
-}
-
-/*
-FUNCTION TO MANAGE CATEGORIES
-*/
-func showCategories(categories []ItemCategory) {
-	if categories == nil || len(categories) == 0 {
-		fmt.Println("Category item is empty!")
-	} else {
-		for i, category := range categories {
-			fmt.Printf("%d. %s\n", i+1, category.Name)
-		}
-	}
-	pressEnterToContinue()
-}
-
-// add categories
-func addCategory(category *[]ItemCategory) {
-
 }
 
 func main() {
@@ -87,14 +74,13 @@ func main() {
 	*/
 	categoryRepo := repository.NewInMemoryItemCategoryRepository()
 	categoryService := service.NewCategoryService(categoryRepo)
+	categoryController := controller.NewItemCategoryController(categoryService)
 
-	service := service.ItemCategoryService{repo: repo}
+	itemRepo := repository.NewInMemoryItemRepository()
+	itemService := service.NewItemService(itemRepo)
+	itemController := controller.NewItemController(itemService)
 
 	var mainMenu string
-
-	// inisiasi slice
-	var itemCategories []ItemCategory
-	//var items []Item
 
 	for {
 		showMainMenu()
@@ -102,7 +88,8 @@ func main() {
 
 		if mainMenu == "1" {
 			fmt.Println("===== SHOW ITEMS =====")
-
+			itemController.ShowItems()
+			pressEnterToContinue()
 			continue
 		} else if mainMenu == "2" {
 			fmt.Println("===== ADD ITEM =====")
@@ -114,8 +101,9 @@ func main() {
 			fmt.Println("===== REMOVE ITEM =====")
 			continue
 		} else if mainMenu == "5" {
+			fmt.Println(">>> Go To Category Menu")
 			// panggil function yg menangani manu ini
-			manageCategories(&itemCategories)
+			manageCategories(categoryController)
 			continue
 		} else if mainMenu == "6" {
 			fmt.Println("===== EXIT =====")
