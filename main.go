@@ -93,6 +93,8 @@ func main() {
 			continue
 		} else if mainMenu == "2" {
 			fmt.Println("===== ADD ITEM =====")
+			itemController.AddItem(*categoryController)
+			pressEnterToContinue()
 			continue
 		} else if mainMenu == "3" {
 			fmt.Println("===== UPDATE ITEM STOCK =====")
