@@ -59,6 +59,8 @@ func manageCategories(categoryController *controller.ItemCategoryController) {
 			continue
 		} else if categoryMenu == "4" {
 			fmt.Println("===== REMOVE CATEGORY =====")
+			categoryController.DeleteItemCategory()
+			pressEnterToContinue()
 			continue
 		} else if categoryMenu == "5" {
 			fmt.Println(" <<< BACK TO MAIN MENU")
@@ -68,17 +70,17 @@ func manageCategories(categoryController *controller.ItemCategoryController) {
 }
 
 func main() {
-
 	/*
 		REPOSITORY & SERVICE
 	*/
 	categoryRepo := repository.NewInMemoryItemCategoryRepository()
-	categoryService := service.NewCategoryService(categoryRepo)
-	categoryController := controller.NewItemCategoryController(categoryService)
-
 	itemRepo := repository.NewInMemoryItemRepository()
-	itemService := service.NewItemService(itemRepo)
-	itemController := controller.NewItemController(itemService)
+
+	categoryService := service.NewCategoryService(categoryRepo, itemRepo)
+	itemService := service.NewItemService(itemRepo, categoryRepo)
+
+	categoryController := controller.NewItemCategoryController(categoryService)
+	itemController := controller.NewItemController(itemService, *categoryService)
 
 	var mainMenu string
 
@@ -93,14 +95,18 @@ func main() {
 			continue
 		} else if mainMenu == "2" {
 			fmt.Println("===== ADD ITEM =====")
-			itemController.AddItem(*categoryController)
+			itemController.AddItem()
 			pressEnterToContinue()
 			continue
 		} else if mainMenu == "3" {
 			fmt.Println("===== UPDATE ITEM STOCK =====")
+			itemController.EditItemStock()
+			pressEnterToContinue()
 			continue
 		} else if mainMenu == "4" {
 			fmt.Println("===== REMOVE ITEM =====")
+			itemController.DeleteItem()
+			pressEnterToContinue()
 			continue
 		} else if mainMenu == "5" {
 			fmt.Println(">>> Go To Category Menu")

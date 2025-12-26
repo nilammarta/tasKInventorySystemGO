@@ -15,6 +15,7 @@ func NewInMemoryItemRepository() ItemRepository {
 	}
 }
 func (repository *InMemoryItemRepository) FindAll() ([]models.Item, error) {
+
 	return repository.items, nil
 }
 
